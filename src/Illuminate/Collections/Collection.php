@@ -283,6 +283,105 @@ class Collection implements ArrayAccess, CanBeEscapedWhenCastToString, Enumerabl
     }
 
     /**
+     * Get the complete list of items that are not shared by both sets.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TValue>|iterable<array-key, TValue>  $items
+     * @return static
+     */
+    public function outerDiff($items)
+    {
+        $items = $this->getArrayableItems($items);
+
+        return new static(array_merge(
+            array_diff($this->items, $items),
+            array_diff($items, $this->items)
+        ));
+    }
+
+    /**
+     * Get the complete list of items that are not shared by both sets, using the callback.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TValue>|iterable<array-key, TValue>  $items
+     * @param  callable(TValue, TValue): int  $callback
+     * @return static
+     */
+    public function outerDiffUsing($items, callable $callback)
+    {
+        $items = $this->getArrayableItems($items);
+
+        return new static(array_merge(
+            array_udiff($this->items, $items, $callback),
+            array_udiff($items, $this->items, $callback),
+        ));
+    }
+
+    /**
+     * Get the complete list of items whose keys and values are not shared by both sets.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @return static
+     */
+    public function outerDiffAssoc($items)
+    {
+        $items = $this->getArrayableItems($items);
+
+        return new static(array_merge(
+            array_diff_assoc($this->items, $items),
+            array_diff_assoc($items, $this->items)
+        ));
+    }
+
+    /**
+     * Get the complete list of items whose keys and values are not shared by both sets, using the callback.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  callable(TKey, TKey): int  $callback
+     * @return static
+     */
+    public function outerDiffAssocUsing($items, callable $callback)
+    {
+        $items = $this->getArrayableItems($items);
+
+        return new static(array_merge(
+            array_diff_uassoc($this->items, $items, $callback),
+            array_diff_uassoc($items, $this->items, $callback)
+        ));
+    }
+
+    /**
+     * Get the complete list of items whose keys are not shared by both sets.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @return static
+     */
+    public function outerDiffKeys($items)
+    {
+        $items = $this->getArrayableItems($items);
+
+        return new static(array_merge(
+            array_diff_key($this->items, $items),
+            array_diff_key($items, $this->items)
+        ));
+    }
+
+    /**
+     * Get the complete list of items whose keys are not shared by both sets, using the callback.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  callable(TKey, TKey): int  $callback
+     * @return static
+     */
+    public function outerDiffKeysUsing($items, callable $callback)
+    {
+        $items = $this->getArrayableItems($items);
+
+        return new static(array_merge(
+            array_diff_ukey($this->items, $items, $callback),
+            array_diff_ukey($items, $this->items, $callback)
+        ));
+    }
+
+    /**
      * Retrieve duplicate items from the collection.
      *
      * @param  (callable(TValue): bool)|string|null  $callback

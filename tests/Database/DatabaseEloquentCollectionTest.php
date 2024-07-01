@@ -321,6 +321,23 @@ class DatabaseEloquentCollectionTest extends TestCase
         $this->assertEquals(new Collection([$one]), $c1->diff($c2));
     }
 
+    public function testCollectionOuterDiffsWithGivenCollection()
+    {
+        $one = m::mock(Model::class);
+        $one->shouldReceive('getKey')->andReturn(1);
+
+        $two = m::mock(Model::class);
+        $two->shouldReceive('getKey')->andReturn(2);
+
+        $three = m::mock(Model::class);
+        $three->shouldReceive('getKey')->andReturn(3);
+
+        $c1 = new Collection([$one, $two]);
+        $c2 = new Collection([$two, $three]);
+
+        $this->assertEquals(new Collection([$one, $three]), $c1->outerDiff($c2));
+    }
+
     public function testCollectionReturnsDuplicateBasedOnlyOnKeys()
     {
         $one = new TestEloquentCollectionModel;

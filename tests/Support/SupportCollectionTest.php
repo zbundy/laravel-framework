@@ -1438,6 +1438,87 @@ class SupportCollectionTest extends TestCase
     }
 
     #[DataProvider('collectionClassProvider')]
+    public function testOuterDiffCollection($collection)
+    {
+        $c = new $collection(['id' => 1, 'first_word' => 'Hello']);
+        $this->assertEquals(
+            ['id' => 1, 'last_word' => 'World'],
+            $c->outerDiff(new $collection(['first_word' => 'Hello', 'last_word' => 'World']))->all()
+        );
+    }
+
+    #[DataProvider('collectionClassProvider')]
+    public function testOuterDiffUsingWithCollection($collection)
+    {
+        $c = new $collection(['en_GB', 'fr', 'HR']);
+        // demonstrate that outerDiff won't support case insensitivity
+        $this->assertEquals(['en_GB', 'fr', 'HR', 'en_gb', 'hr'], $c->outerDiff(new $collection(['en_gb', 'hr']))->values()->toArray());
+        // allow for case insensitive outer difference
+        $this->assertEquals(['fr', 'de'], $c->outerDiffUsing(new $collection(['en_gb', 'hr', 'de']), 'strcasecmp')->values()->toArray());
+    }
+
+    #[DataProvider('collectionClassProvider')]
+    public function testOuterDiffUsingWithNull($collection)
+    {
+        $c = new $collection(['en_GB', 'fr', 'HR']);
+        $this->assertEquals(['en_GB', 'fr', 'HR'], $c->outerDiffUsing(null, 'strcasecmp')->values()->toArray());
+    }
+
+    #[DataProvider('collectionClassProvider')]
+    public function testOuterDiffNull($collection)
+    {
+        $c = new $collection(['id' => 1, 'first_word' => 'Hello']);
+        $this->assertEquals(['id' => 1, 'first_word' => 'Hello'], $c->outerDiff(null)->all());
+    }
+
+    #[DataProvider('collectionClassProvider')]
+    public function testOuterDiffKeys($collection)
+    {
+        $c1 = new $collection(['id' => 1, 'first_word' => 'Hello']);
+        $c2 = new $collection(['id' => 123, 'foo_bar' => 'Hello']);
+        $this->assertEquals(['first_word' => 'Hello', 'foo_bar' => 'Hello'], $c1->outerDiffKeys($c2)->all());
+    }
+
+    #[DataProvider('collectionClassProvider')]
+    public function testOuterDiffKeysUsing($collection)
+    {
+        $c1 = new $collection(['id' => 1, 'first_word' => 'Hello']);
+        $c2 = new $collection(['ID' => 123, 'foo_bar' => 'Hello']);
+        // demonstrate that outerDiffKeys won't support case insensitivity
+        $this->assertEquals(['id' => 1, 'first_word' => 'Hello', 'foo_bar' => 'Hello', 'ID' => 123], $c1->outerDiffKeys($c2)->all());
+        // allow for case insensitive outer difference
+        $this->assertEquals(['first_word' => 'Hello', 'foo_bar' => 'Hello'], $c1->outerDiffKeysUsing($c2, 'strcasecmp')->all());
+    }
+
+    #[DataProvider('collectionClassProvider')]
+    public function testOuterDiffAssoc($collection)
+    {
+        $c1 = new $collection(['id' => 1, 'first_word' => 'Hello', 'not_affected' => 'value']);
+        $c2 = new $collection(['id' => 123, 'foo_bar' => 'Hello', 'not_affected' => 'value']);
+        $this->assertEquals(
+            ['id' => 123, 'first_word' => 'Hello', 'foo_bar' => 'Hello'],
+            $c1->outerDiffAssoc($c2)->all()
+        );
+    }
+
+    #[DataProvider('collectionClassProvider')]
+    public function testOuterDiffAssocUsing($collection)
+    {
+        $c1 = new $collection(['a' => 'green', 'b' => 'brown', 'c' => 'blue', 'red']);
+        $c2 = new $collection(['A' => 'green', 'yellow', 'red']);
+        // demonstrate that the case of the keys will affect the output when outerDiffAssoc is used
+        $this->assertEquals(
+            ['a' => 'green', 'b' => 'brown', 'c' => 'blue', 'red', 'A' => 'green', 'yellow', 'red'],
+            $c1->outerDiffAssoc($c2)->all()
+        );
+        // allow for case insensitive outer difference
+        $this->assertEquals(
+            ['b' => 'brown', 'c' => 'blue', 'red', 'yellow', 'red'],
+            $c1->outerDiffAssocUsing($c2, 'strcasecmp')->all()
+        );
+    }
+
+    #[DataProvider('collectionClassProvider')]
     public function testDuplicates($collection)
     {
         $duplicates = $collection::make([1, 2, 1, 'laravel', null, 'laravel', 'php', null])->duplicates()->all();

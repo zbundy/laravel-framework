@@ -256,6 +256,72 @@ class SupportLazyCollectionIsLazyTest extends TestCase
         });
     }
 
+    public function testOuterDiffIsLazy()
+    {
+        $this->assertDoesNotEnumerate(function ($collection) {
+            $collection->outerDiff([1, 2]);
+        });
+
+        $this->assertEnumeratesOnce(function ($collection) {
+            $collection->outerDiff([1, 2])->all();
+        });
+    }
+
+    public function testOuterDiffAssocIsLazy()
+    {
+        $this->assertDoesNotEnumerate(function ($collection) {
+            $collection->outerDiffAssoc([1, 2]);
+        });
+
+        $this->assertEnumeratesOnce(function ($collection) {
+            $collection->outerDiffAssoc([1, 2])->all();
+        });
+    }
+
+    public function testOuterDiffAssocUsingIsLazy()
+    {
+        $this->assertDoesNotEnumerate(function ($collection) {
+            $collection->outerDiffAssocUsing([1, 2], 'strcasecmp');
+        });
+
+        $this->assertEnumeratesOnce(function ($collection) {
+            $collection->outerDiffAssocUsing([1, 2], 'strcasecmp')->all();
+        });
+    }
+
+    public function testOuterDiffKeysIsLazy()
+    {
+        $this->assertDoesNotEnumerate(function ($collection) {
+            $collection->outerDiffKeys([1, 2]);
+        });
+
+        $this->assertEnumeratesOnce(function ($collection) {
+            $collection->outerDiffKeys([1, 2])->all();
+        });
+    }
+
+    public function testOuterDiffKeysUsingIsLazy()
+    {
+        $this->assertDoesNotEnumerate(function ($collection) {
+            $collection->outerDiffKeysUsing([1, 2], 'strcasecmp');
+        });
+
+        $this->assertEnumeratesOnce(function ($collection) {
+            $collection->outerDiffKeysUsing([1, 2], 'strcasecmp')->all();
+        });
+    }
+
+    public function testOuterDiffUsingIsLazy()
+    {
+        $this->assertDoesNotEnumerate(function ($collection) {
+            $collection->outerDiffUsing([1, 2], 'strcasecmp');
+        });
+
+        $this->assertEnumeratesOnce(function ($collection) {
+            $collection->outerDiffUsing([1, 2], 'strcasecmp')->all();
+        });
+    }
+
     public function testDuplicatesIsLazy()
     {
         $this->assertDoesNotEnumerate(function ($collection) {

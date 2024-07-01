@@ -378,6 +378,75 @@ class LazyCollection implements CanBeEscapedWhenCastToString, Enumerable
     }
 
     /**
+     * Get the complete list of items that are not shared by both sets.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TValue>|iterable<array-key, TValue>  $items
+     * @return static
+     */
+    public function outerDiff($items)
+    {
+        return $this->passthru('outerDiff', func_get_args());
+    }
+
+    /**
+     * Get the complete list of items that are not shared by both sets, using the callback.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TValue>|iterable<array-key, TValue>  $items
+     * @param  callable(TValue, TValue): int  $callback
+     * @return static
+     */
+    public function outerDiffUsing($items, callable $callback)
+    {
+        return $this->passthru('outerDiffUsing', func_get_args());
+    }
+
+    /**
+     * Get the complete list of items whose keys and values are not shared by both sets.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @return static
+     */
+    public function outerDiffAssoc($items)
+    {
+        return $this->passthru('outerDiffAssoc', func_get_args());
+    }
+
+    /**
+     * Get the complete list of items whose keys and values are not shared by both sets, using the callback.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  callable(TKey, TKey): int  $callback
+     * @return static
+     */
+    public function outerDiffAssocUsing($items, callable $callback)
+    {
+        return $this->passthru('outerDiffAssocUsing', func_get_args());
+    }
+
+    /**
+     * Get the complete list of items whose keys are not shared by both sets.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @return static
+     */
+    public function outerDiffKeys($items)
+    {
+        return $this->passthru('outerDiffKeys', func_get_args());
+    }
+
+    /**
+     * Get the complete list of items whose keys are not shared by both sets, using the callback.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  callable(TKey, TKey): int  $callback
+     * @return static
+     */
+    public function outerDiffKeysUsing($items, callable $callback)
+    {
+        return $this->passthru('outerDiffKeysUsing', func_get_args());
+    }
+
+    /**
      * Retrieve duplicate items.
      *
      * @param  (callable(TValue): bool)|string|null  $callback
